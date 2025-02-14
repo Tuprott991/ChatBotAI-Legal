@@ -1,120 +1,112 @@
-# 🤖 Xây Dựng Chatbot AI với LangChain và Python
+# 🤖 Building a Legal Assistant AI Chatbot with LangChain and Python
 
+## 📋 System Requirements
 
-## 📋 Yêu cầu hệ thống
+- Python 3.8 or higher, recommended version 3.8.18 (Download: [python.org](https://www.python.org/downloads/))
+- Docker Desktop (Download: [docker.com](https://www.docker.com/products/docker-desktop/))
+- OpenAI API key (Register: [platform.openai.com](https://platform.openai.com/api-keys))
+- Approximately 4GB of free RAM
 
-- Python 3.8 trở lên, khuyến nghị version 3.8.18 (Tải tại: https://www.python.org/downloads/)
-- Docker Desktop (Tải tại: https://www.docker.com/products/docker-desktop/)
-- OpenAI API key (Đăng ký tại: https://platform.openai.com/api-keys)
-- Khoảng 4GB RAM trống
+## 🚀 Installation and Setup Steps
 
-## 🚀 Các bước cài đặt và chạy
+### Step 1: Set Up Environment
 
-### Bước 1: Cài đặt môi trường
+- Recommended to use Python version 3.8.18.
+- Use conda to set up the environment with the command: `conda create -n myenv python=3.8.18`
+- Activate the environment with the command: `conda activate myenv`
+- Open Terminal/Command Prompt and run the following command:
+  - `pip install -r requirements.txt`
 
-- Khuyến nghị dùng python version 3.8.18.
-- Nên dùng conda, setup environment qua câu lệnh: conda create -n myenv python=3.8.18
-- Sau đó active enviroment qua câu lệnh: conda activate myenv
-- Mở Terminal/Command Prompt và chạy lệnh sau:
-  - pip install -r requirements.txt
+### Step 2: Download Ollama
 
-### Bước 2: Tải xuống Ollama
+- Visit: [ollama.com/download](https://ollama.com/download)
+- Choose the appropriate version for your operating system
+- Follow the installation instructions
+- Run the command: `ollama run llama2`
 
-- Truy cập: https://ollama.com/download
-- Chọn phiên bản phù hợp với hệ điều hành
-- Cài đặt theo hướng dẫn
-- Chạy lệnh: ollama run llama2
+### Step 3: Install and Run Milvus Database
 
-### Bước 3: Cài đặt và chạy Milvus Database
-
-1. Khởi động Docker Desktop
-2. Mở Terminal/Command Prompt, chạy lệnh:
+1. Start Docker Desktop
+2. Open Terminal/Command Prompt and run the command:
+   ```sh
    docker compose up --build
+   ```
 
-Option: Cài đặt attu để view data đã seed vào Milvus:
+Option: Install attu to view data seeded into Milvus:
+  1. Run the command
+   ```sh
+   docker run -p 8000:3000 -e MILVUS_URL={milvus server IP}:19530 zilliz/attu:v2.4
+   ```
+   2. Replace "milvus server IP" with your local internet IP. To get the local IP, run:
+    ```sh
+   ipconfig
+   ```
+   or similar commands for other operating systems.
 
-1. Chạy lệnh: docker run -p 8000:3000 -e MILVUS_URL={milvus server IP}:19530 zilliz/attu:v2.4
-2. 2 Thay "milvus server IP" bằng IP internet local, cách lấy IP local:
-   - Chạy lệnh: ipconfig hoặc tương tự với các hệ điều hành khác
+### Step 4: Configure OpenAI API
+1. Create a `.env` file
+2. Visit OpenAI to get your `OPENAI_API_KEY:` [platform.openai.com](platform.openai.com)
+3. Add the API key to the `.env` file
+```sh
+OPENAI_API_KEY=sk-your-api-key-here
+```
+Options: Configure Langsmith:
+1. Visit Langsmith to get your `LANGCHAIN_API_KEY`: [smith.langchain.com](smith.langchain.com)
+2. Add the following lines to the `.env` file:
+```sh
+LANGCHAIN_TRACING_V2=true
+LANGCHAIN_ENDPOINT="https://api.smith.langchain.com"
+LANGCHAIN_API_KEY="your-langchain-api-key-here"
+LANGCHAIN_PROJECT="project-name"
+```
 
-### Bước 4: Cấu hình OpenAI API
-
-1. Tạo file `.env`
-2. Truy cập OpenAI để lấy OPENAI_API_KEY:https://platform.openai.com/api-keys
-3. Thêm API key vào file .env:
-  - OPENAI_API_KEY=sk-your-api-key-here
-
-Options: Cấu hình Langsmith:
-1. Truy cập langsmith để lấy LANGCHAIN_API_KEY: https://smith.langchain.com/
-2. Thêm 4 dòng sau vào .env:
-  - LANGCHAIN_TRACING_V2=true
-  - LANGCHAIN_ENDPOINT="https://api.smith.langchain.com"
-  - LANGCHAIN_API_KEY="your-langchain-api-key-here"
-  - LANGCHAIN_PROJECT="project-name"
-
-### Bước 5: Chạy ứng dụng
-
-1. Crawl data về local 
-Mở Terminal/Command Prompt, di chuyển vào thư mục src  `cd src` và chạy:
-```python
+### Step 5: Run the Application
+1. Crawl data to local: Open Terminal/Command Prompt, navigate to the src directory with `cd src` and run:
+```sh
 python crawl.py
 ```
-2. Seed data vào Milvus:
-```python 
-python seed_data.py
+2. Seed data into Milvus
+Check if the data is in Milvus by visiting: http://localhost:8000/#/databases/default/collections Ensure Milvus is running with:
+```sh
+docker run -p 8000:3000 -e MILVUS_URL={milvus server IP}:19530 zilliz/attu:v2.4
 ```
-(Kiểm tra data đã aào Milvus chưa bằng cách truy cập: http://localhost:8000/#/databases/default/colletions
-<Nhớ để ý `docker run -p 8000:3000 -e MILVUS_URL={milvus server IP}:19530 zilliz/attu:v2.4` để chắc chắn Milvus đang hoạt động >)
-3. Run ứng dụng:
-```python
+3. Run the application
+```sh 
 streamlit run main.py
 ```
+## 💻 Usage
+### 1. Start the Application
+1. Ensure Docker Desktop is running
+2. Ensure Ollama is running with the llama2 model
+3. Open Terminal/Command Prompt, navigate to the src directory
+4. Run the command: streamlit run main.py
+### 2. Load and Process Data
+#### Option 1: From Local JSON File
 
-## 💻 Cách sử dụng
+1. Select the "File Local" tab on the sidebar
+2. Enter the directory path containing the JSON file (default: data)
+3. Enter the JSON file name (default: stack.json)
+4. Click "Load data from file"
+5. Wait for the system to process and notify success
+#### Option 2: From URL
 
-### 1. Khởi động ứng dụng
-
-1. Đảm bảo Docker Desktop đang chạy
-2. Đảm bảo Ollama đang chạy với mô hình llama2
-3. Mở Terminal/Command Prompt, di chuyển vào thư mục src
-4. Chạy lệnh: `streamlit run main.py`
-
-### 2. Tải và xử lý dữ liệu
-
-**Cách 1: Từ file JSON local**
-
-1. Chọn tab "File Local" ở thanh bên
-2. Nhập đường dẫn thư mục chứa file JSON (mặc định: data)
-3. Nhập tên file JSON (mặc định: stack.json)
-4. Nhấn "Tải dữ liệu từ file"
-5. Đợi hệ thống xử lý và thông báo thành công
-
-**Cách 2: Từ URL**
-
-1. Chọn tab "URL trực tiếp" ở thanh bên
-2. Nhập URL cần crawl dữ liệu
-3. Nhấn "Crawl dữ liệu"
-4. Đợi hệ thống crawl và xử lý dữ liệu
-
-### 3. Tương tác với chatbot
-
-1. Nhập câu hỏi vào ô chat ở phần dưới màn hình
-2. Nhấn Enter hoặc nút gửi để gửi câu hỏi
-3. Chatbot sẽ:
-   - Tìm kiếm thông tin liên quan trong cơ sở dữ liệu
-   - Kết hợp kết quả từ nhiều nguồn
-   - Tạo câu trả lời dựa trên ngữ cảnh
-4. Lịch sử chat sẽ được hiển thị ở phần chính của màn hình
-
-### 4. Xem thông tin hệ thống
-
-- Theo dõi trạng thái kết nối Milvus ở thanh bên
-- Kiểm tra số lượng documents đã được tải
-- Xem thông tin về mô hình đang sử dụng
-
-
-## 📚 Tài liệu tham khảo
-
+1. Select the "Direct URL" tab on the sidebar
+2. Enter the URL to crawl data
+3. Click "Crawl data"
+4. Wait for the system to crawl and process the data
+#### 3. Interact with the Chatbot
+1. Enter your question in the chat box at the bottom of the screen
+2. Press Enter or click the send button to submit your question
+3. The chatbot will:
+- Search for relevant information in the database
+- Combine results from multiple sources
+- Generate a context-based response
+- Chat history will be displayed in the main screen area
+#### 4. View System Information
+1. Monitor Milvus connection status on the sidebar
+2. Check the number of documents loaded
+3. View information about the model being used
+## 📚 References
 - LangChain: https://python.langchain.com/docs/introduction/
   - Agents: https://python.langchain.com/docs/tutorials/qa_chat_history/#tying-it-together-1
   - BM25: https://python.langchain.com/docs/integrations/retrievers/bm25/#create-a-new-retriever-with-documents
