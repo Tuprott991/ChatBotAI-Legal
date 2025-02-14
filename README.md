@@ -38,7 +38,7 @@ Option: Install attu to view data seeded into Milvus:
    docker run -p 8000:3000 -e MILVUS_URL={milvus server IP}:19530 zilliz/attu:v2.4
    ```
    2. Replace "milvus server IP" with your local internet IP. To get the local IP, run:
-    ```sh
+   ```sh
    ipconfig
    ```
    or similar commands for other operating systems.
